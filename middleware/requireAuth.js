@@ -16,7 +16,9 @@ async function requireAuth(req, res, next) {
     req.user = user;
     // continue on
     next();
-  } catch (err) {}
+  } catch (err) {
+    return res.sendStatus(401);
+  }
 }
 
 module.exports = requireAuth;

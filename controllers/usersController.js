@@ -20,36 +20,50 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-  //Get the email and password off req body
-  const { email, password } = req.body;
-  //Find the user with requested email
-  const user = await User.findOne({ email });
-  if (!user) return res.sendStatus(401);
-  //Compare sent in password with found user password has
-  const passwordMatch = bcrypt.compareSync(password, user.password);
-  if (!passwordMatch) return res.sendStatus(401);
-  // create a JWT Token
-  const exp = Date.now() + 1000 * 60 * 60 * 24 * 30;
-  const token = jwt.sign({ sub: user._id, exp }, process.env.SECRET);
-  // Set cookie
-  res.cookie("Authorization", token, {
-    expires: new Date(exp),
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
+  try {
+    //Get the email and password off req body
+    const { email, password } = req.body;
+    //Find the user with requested email
+    const user = await User.findOne({ email });
+    if (!user) return res.sendStatus(401);
+    //Compare sent in password with found user password has
+    const passwordMatch = bcrypt.compareSync(password, user.password);
+    if (!passwordMatch) return res.sendStatus(401);
+    // create a JWT Token
+    const exp = Date.now() + 1000 * 60 * 60 * 24 * 30;
+    const token = jwt.sign({ sub: user._id, exp }, process.env.SECRET);
+    // Set cookie
+    res.cookie("Authorization", token, {
+      expires: new Date(exp),
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
 
-  //Send it
-  res.sendStatus(200);
+    //Send it
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(400);
+  }
 }
 
 function logout(req, res) {
-  res.clearCookie("Authorization");
-  res.sendStatus(200);
+  try {
+    res.clearCookie("Authorization");
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(400);
+  }
 }
 
 function checkAuth(req, res) {
-  res.sendStatus(200);
+  try {
+    res.sendStatus(200);
+  } catch (err) {
+    return res.sendStatus(400);
+  }
 }
 
 module.exports = {

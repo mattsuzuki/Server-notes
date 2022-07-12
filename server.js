@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: true,
+    origin: "*",
     credentials: true,
   })
 );
@@ -33,11 +33,11 @@ app.post("/signup", usersController.signup);
 app.post("/login", usersController.login);
 app.get("/logout", usersController.logout);
 app.get("/check-auth", requireAuth, usersController.checkAuth);
-app.get("/notes", notesController.fetchNotes);
-app.get("/notes/:id", notesController.fetchNotes);
-app.post("/notes", notesController.createNote);
-app.put("/notes/:id", notesController.updateNote);
-app.delete("/notes/:id", notesController.deleteNote);
+app.get("/notes", requireAuth, notesController.fetchNotes);
+app.get("/notes/:id", requireAuth, notesController.fetchNotes);
+app.post("/notes", requireAuth, notesController.createNote);
+app.put("/notes/:id", requireAuth, notesController.updateNote);
+app.delete("/notes/:id", requireAuth, notesController.deleteNote);
 
 //start our server
 app.listen(process.env.PORT);
