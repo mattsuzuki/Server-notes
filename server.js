@@ -20,8 +20,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production" ? "https://glowz.vercel.app" : true,
+    origin: "https://glowz.vercel.app",
+    credentials: true,
   })
 );
 
