@@ -17,6 +17,7 @@ async function requireAuth(req, res, next) {
     // continue on
     next();
   } catch (err) {
+    console.log(err);
     return res.sendStatus(401);
   }
 }
